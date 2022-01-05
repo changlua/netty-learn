@@ -16,12 +16,13 @@ import java.net.InetSocketAddress;
  * @ClassName O2handleResultClient
  * @Author ChangLu
  * @Date 2022/1/3 23:07
- * @Description 处理结果两种方式
+ * @Description 处理连接操作(异步)：对于异步连接包含两种处理方式（同步阻塞等待、异步）
  */
 @Slf4j
-public class O2handleResultClient {
+public class O2handleConnectClient {
 
     public static void main(String[] args) throws Exception{
+        new NioEventLoopGroup().shutdownGracefully();
         ChannelFuture channelFuture = new Bootstrap()
                 .group(new NioEventLoopGroup())
                 .channel(NioSocketChannel.class)
@@ -50,6 +51,7 @@ public class O2handleResultClient {
                 channel.writeAndFlush("hello!");
             }
         });
+
     }
 
 
