@@ -1,4 +1,4 @@
-package com.changlu.No3Netty入门.No2Netty组件.future;
+package com.changlu.No3Netty入门.No2Netty组件.future与promise;
 
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.util.concurrent.Future;
@@ -12,7 +12,7 @@ import java.util.concurrent.ExecutionException;
  * @ClassName NettyFutureTest
  * @Author ChangLu
  * @Date 2022/1/5 19:55
- * @Description TODO
+ * @Description Netty的Future测试：同步、异步方法
  */
 @Slf4j
 public class NettyFutureTest {

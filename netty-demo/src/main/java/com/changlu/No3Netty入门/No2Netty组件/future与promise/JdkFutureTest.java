@@ -1,4 +1,4 @@
-package com.changlu.No3Netty入门.No2Netty组件.future;
+package com.changlu.No3Netty入门.No2Netty组件.future与promise;
 
 import lombok.extern.slf4j.Slf4j;
 
