@@ -6,6 +6,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+import io.netty.handler.logging.LoggingHandler;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetSocketAddress;
@@ -28,6 +29,7 @@ public class O1Client {
                     @Override
                     protected void initChannel(NioSocketChannel channel) throws Exception {
                         channel.pipeline().addLast(new StringDecoder());
+                        channel.pipeline().addLast(new LoggingHandler());
                         channel.pipeline().addLast(new StringEncoder());
                         channel.pipeline().addLast(new ChannelInboundHandlerAdapter() {
                             @Override

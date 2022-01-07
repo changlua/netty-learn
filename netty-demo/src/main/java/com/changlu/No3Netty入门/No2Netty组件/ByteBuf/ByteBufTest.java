@@ -2,6 +2,10 @@ package com.changlu.No3Netty入门.No2Netty组件.ByteBuf;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
+import io.netty.buffer.Unpooled;
+import lombok.extern.slf4j.Slf4j;
+
+import java.nio.charset.Charset;
 
 import static io.netty.buffer.ByteBufUtil.appendPrettyHexDump;
 import static io.netty.util.internal.StringUtil.NEWLINE;
@@ -12,15 +16,50 @@ import static io.netty.util.internal.StringUtil.NEWLINE;
  * @Date 2022/1/6 16:28
  * @Description ByteBuf案例：创建
  */
+@Slf4j
 public class ByteBufTest {
 
     public static void main(String[] args) {
 //        createByteBufDemo();
-        seeByteBufClassDemo();
+//        seeByteBufClassDemo();
+//        writeToByteBufDemo();
+        readByteBufDemo();
     }
 
     /**
-     * ByteBuf创建：可进行自动扩容
+     * 04、测试ByteBuf的读取：包含重复读取某个字节
+     */
+    public static void readByteBufDemo(){
+        final ByteBuf buffer = ByteBufAllocator.DEFAULT.buffer(20);
+        buffer.writeBytes("123456789".getBytes());//写入字节
+        System.out.println(buffer.readByte());
+        System.out.println(buffer.readByte());
+        System.out.println(buffer.readByte());
+        System.out.println(buffer.readByte());
+        buffer.markReaderIndex();//可标记读索引以及写索引
+        buffer.readBytes(4);
+        buffer.resetReaderIndex();
+        log.debug("读取读索引的字节");
+        System.out.println(buffer.readByte());
+    }
+
+    /**
+     * 03、测试ByteBuf的写入与扩容
+     */
+    public static void writeToByteBufDemo(){
+        final ByteBuf buffer = ByteBufAllocator.DEFAULT.buffer(20);
+        buffer.writeBytes("c".getBytes());//写入字节
+        final StringBuilder builder = new StringBuilder("hang");
+        buffer.writeCharSequence(builder, Charset.defaultCharset());//写入stringbuilder
+        buffer.writeCharSequence("lu", Charset.defaultCharset());//写入字符串
+        log(buffer);
+        //测试扩容
+        buffer.writeCharSequence(",helloworld", Charset.defaultCharset());
+        log(buffer);
+    }
+
+    /**
+     * 01、ByteBuf创建：可进行自动扩容
      */
     public static void createByteBufDemo(){
         final ByteBuf bytebuf = ByteBufAllocator.DEFAULT.buffer(20);
@@ -37,7 +76,7 @@ public class ByteBufTest {
     }
 
     /**
-     * 查看ByteBuf是否池化、采用的是直接内存或堆内存
+     * 02、查看ByteBuf是否池化、采用的是直接内存或堆内存
      */
     public static void seeByteBufClassDemo(){
         //buffer()：默认是直接内存
@@ -52,7 +91,7 @@ public class ByteBufTest {
      * 工具类：用于方便查看ByteBuf中的具体数据信息
      * @param buffer
      */
-    private static void log(ByteBuf buffer) {
+    public static void log(ByteBuf buffer) {
         int length = buffer.readableBytes();
         int rows = length / 16 + (length % 15 == 0 ? 0 : 1) + 4;
         StringBuilder buf = new StringBuilder(rows * 80 * 2)
