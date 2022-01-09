@@ -19,7 +19,9 @@ public class SliceTest {
         //实际应用测试
 //        practicalUse();
 //        sliceTest();
-        sliceTest2();
+//        sliceTest2();
+        //案例：测试释放切割后的某一个ByteBuf，另一个ByteBuf是否还能使用
+        sliceTest3();
     }
 
     /**
@@ -64,6 +66,21 @@ public class SliceTest {
         //若是直接对原ByteBuf进行清理，然后使用切片得到的ByteBuf会抛出异常IllegalReferenceCountException: refCnt: 0
         //若是在release()之后也想正常使用，可以在此之前使用retain()进行引用+1，release()相对于会引用-1，此时就不会真正释放内存，自然也就能欧使用
         log(sliceBuf);
+    }
+
+    /**
+     * 测试描述：若是将一个ByteBuf切割成两个ByteBuf，释放了其中一个，那么另一个被切割的是否还能够被使用？
+     *      答：不能够使用了，原先的ByteBuf会直接释放掉！
+     */
+    public static void sliceTest3(){
+        ByteBuf buffer = ByteBufAllocator.DEFAULT.buffer(20);
+        buffer.writeBytes(new byte[]{1,2,3,4});
+        final ByteBuf sliceBuf = buffer.slice(0, 2);
+        final ByteBuf sliceBuf2 = buffer.slice(2, 2);
+        //释放掉切片的其中一个buffer
+        sliceBuf2.release();
+//        log(sliceBuf);   //抛出异常，另一个切割的ByteBuf不能被使用
+        log(buffer);   //抛出异常，原先整个ByteBuf不能够被使用
     }
 
 }

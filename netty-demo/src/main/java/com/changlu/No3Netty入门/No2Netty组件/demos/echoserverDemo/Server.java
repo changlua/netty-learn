@@ -23,8 +23,10 @@ import java.nio.charset.Charset;
 public class Server {
 
     public static void main(String[] args) throws InterruptedException {
+        final NioEventLoopGroup boss = new NioEventLoopGroup();
+        final NioEventLoopGroup worker = new NioEventLoopGroup(2);
         new ServerBootstrap()
-                .group(new NioEventLoopGroup(), new NioEventLoopGroup(2))
+                .group(boss, worker)
                 .channel(NioServerSocketChannel.class)
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
