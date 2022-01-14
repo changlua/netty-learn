@@ -7,7 +7,6 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class GroupQuitRequestMessage extends Message {
     private String groupName;
-
     private String username;
 
     public GroupQuitRequestMessage(String username, String groupName) {

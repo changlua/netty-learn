@@ -12,7 +12,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
  * @ClassName ChatRequestMessageHandler
  * @Author ChangLu
  * @Date 2022/1/13 18:54
- * @Description 聊天请求对象处理器：针对于ChatRequestMessage
+ * @Description 聊天请求对象处理器：针对于ChatRequestMessage。【send [username] [content]】
  */
 @ChannelHandler.Sharable
 public class ChatRequestMessageHandler extends SimpleChannelInboundHandler<ChatRequestMessage> {

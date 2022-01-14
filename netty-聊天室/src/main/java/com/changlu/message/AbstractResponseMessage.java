@@ -6,8 +6,8 @@ import lombok.ToString;
 @Data
 @ToString(callSuper = true)
 public abstract class AbstractResponseMessage extends Message {
-    private boolean success;
-    private String reason;
+    private boolean success = true;
+    private String reason = "成功！";
 
     public AbstractResponseMessage() {
     }
