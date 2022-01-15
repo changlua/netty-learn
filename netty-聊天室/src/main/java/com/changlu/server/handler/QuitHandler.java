@@ -28,5 +28,6 @@ public class QuitHandler extends ChannelInboundHandlerAdapter {
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         SessionFactory.getSession().unbind(ctx.channel());
         log.debug("{} 已经异常断开 异常是{}", ctx.channel(), cause.getMessage());
+        cause.printStackTrace();
     }
 }
