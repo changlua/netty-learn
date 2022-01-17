@@ -9,6 +9,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
@@ -22,11 +23,24 @@ import java.lang.reflect.Method;
 public class RpcRequestMessageHandler extends SimpleChannelInboundHandler<RpcRequestMessage> {
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, RpcRequestMessage message) throws Exception {
-        final Class<?> clazz = Class.forName(message.getInterfaceName());
-        final Method method = clazz.getMethod(message.getMethodName(), message.getParameterTypes());
-        final Object returnVal = method.invoke(ServicesFactory.getServiceImpl(clazz), message.getParameterValue());
-        ctx.channel().writeAndFlush(new RpcResponseMessage(returnVal, null));
+    protected void channelRead0(ChannelHandlerContext ctx, RpcRequestMessage message){
+        RpcResponseMessage responseMessage = new RpcResponseMessage();
+        responseMessage.setSequenceId(message.getSequenceId());//将请求序列号存储到响应对象中
+        Class<?> clazz = null;
+        Method method = null;
+        Object returnVal = null;
+        try {
+            clazz = Class.forName(message.getInterfaceName());
+            method = clazz.getMethod(message.getMethodName(), message.getParameterTypes());
+            returnVal = method.invoke(ServicesFactory.getServiceImpl(clazz), message.getParameterValue());
+            //运行成功设置值
+            responseMessage.setReturnValue(returnVal);
+        } catch (Exception e) {
+            e.printStackTrace();
+            //出现异常封装好异常信息后传出
+            responseMessage.setExceptionValue(new Exception(e.getCause().getMessage()));
+        }
+        ctx.channel().writeAndFlush(responseMessage);
     }
 
     public static void main(String[] args) throws Exception{

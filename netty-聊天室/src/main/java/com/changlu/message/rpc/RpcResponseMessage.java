@@ -1,6 +1,7 @@
 package com.changlu.message.rpc;
 
 import com.changlu.message.AbstractResponseMessage;
+import com.changlu.message.Message;
 import lombok.Data;
 import lombok.ToString;
 
@@ -12,7 +13,7 @@ import lombok.ToString;
  */
 @Data
 @ToString(callSuper = true)
-public class RpcResponseMessage extends AbstractResponseMessage {
+public class RpcResponseMessage extends Message {
 
     /**
      * 返回值
@@ -23,6 +24,9 @@ public class RpcResponseMessage extends AbstractResponseMessage {
      * 异常值
      */
     private Exception exceptionValue;
+
+    public RpcResponseMessage() {
+    }
 
     public RpcResponseMessage(Object returnValue, Exception exceptionValue) {
         this.returnValue = returnValue;
