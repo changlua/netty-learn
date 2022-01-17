@@ -1,23 +1,19 @@
 package com.changlu.client;
 
-import com.changlu.message.LoginRequestMessage;
 import com.changlu.message.rpc.RpcRequestMessage;
 import com.changlu.protocol.MessageCodecSharable;
 import com.changlu.protocol.ProcotolFrameDecoder;
 import com.changlu.server.handler.rpc.RpcResponseMessageHandler;
 import com.changlu.server.service.rpc.RpcService;
-import com.sun.org.apache.regexp.internal.REUtil;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.util.concurrent.DefaultPromise;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
-import io.netty.util.concurrent.Promise;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Proxy;
@@ -34,15 +30,16 @@ public class RpcClient {
 
     private static volatile Channel channel = null;
     private static Object lock = new Object();
-    //产生出新的序列号
+    //并发计数器
     private static AtomicInteger seqId = new AtomicInteger(0);
 
 
     public static void main(String[] args) {
         final RpcService proxyService = getProxyService(RpcService.class);
+        //测试
         System.out.println(proxyService.sayHello("changlu"));
-        System.out.println(proxyService.sayHello("liner"));
-        System.out.println(proxyService.sayHello("world!"));
+//        System.out.println(proxyService.sayHello("liner"));
+//        System.out.println(proxyService.sayHello("world!"));
     }
 
     private static <T> T getProxyService(Class<T> clazz) {
@@ -88,6 +85,9 @@ public class RpcClient {
         }
     }
 
+    /**
+     * 初始化channel
+     */
     private static void initChannel() {
         MessageCodecSharable messageCodec = new MessageCodecSharable();
         LoggingHandler loggingHandler = new LoggingHandler(LogLevel.DEBUG);

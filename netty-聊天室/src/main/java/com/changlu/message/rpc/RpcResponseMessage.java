@@ -1,6 +1,5 @@
 package com.changlu.message.rpc;
 
-import com.changlu.message.AbstractResponseMessage;
 import com.changlu.message.Message;
 import lombok.Data;
 import lombok.ToString;
