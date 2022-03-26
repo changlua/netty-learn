@@ -6,6 +6,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.codec.string.StringEncoder;
 
 /**
  * @ClassName NettyServer
@@ -33,6 +34,7 @@ public class NettyServer {
                         //6、添加具体handler。
                         // StringDecoder：目的就是将ByteBuf数据类型转换为String字符串
                         ch.pipeline().addLast(new StringDecoder());
+                        ch.pipeline().addLast(new StringEncoder());
                         // ChannelInboundHandlerAdapter：自定义handler
                         ch.pipeline().addLast(new ChannelInboundHandlerAdapter(){
 
@@ -40,6 +42,7 @@ public class NettyServer {
                             @Override
                             public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
                                 System.out.println(msg);//将转换后的字符串打印出来！
+                                ctx.channel().writeAndFlush("hello,client!");
                             }
                         });
                     }
